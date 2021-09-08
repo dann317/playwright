@@ -19,7 +19,7 @@ public class NavigateSVE {
     @BeforeAll
     public void openBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
 
     }
 
@@ -28,7 +28,7 @@ public class NavigateSVE {
         methodName = Thread.currentThread()
                 .getStackTrace()[2]
                 .getMethodName();
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get("./videos/video - "+methodName+".mp4")));
         sve = context.newPage();
     }
 
