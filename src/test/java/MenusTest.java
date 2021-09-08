@@ -1,21 +1,18 @@
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MenusTest extends NavigateSVE {
     protected static final String CONSOLIDATED_BALANCES = "Saldos consolidados";
-    protected static final String DEP_ACCOUNT_BALANCES =  "Cuentas de depositos";
+    protected static final String DEP_ACCOUNT_BALANCES = "Cuentas de depositos";
 
     @Test
     public void isAbleToGetDepositsAccountBalances() {
         getNewPage();
         loginWithToken();
-        MatcherAssert.assertThat( Normalizer.normalize(getAvaiableMenus(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""), CoreMatchers.containsString(DEP_ACCOUNT_BALANCES));
+        MatcherAssert.assertThat(Normalizer.normalize(getAvaiableMenus(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""), CoreMatchers.containsString(DEP_ACCOUNT_BALANCES));
     }
 
     @Test
