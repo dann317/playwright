@@ -2,7 +2,6 @@ import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
 
 import java.nio.file.Paths;
-import java.util.List;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class NavigateSVE {
@@ -11,6 +10,7 @@ public class NavigateSVE {
     protected Browser browser;
     protected BrowserContext context;
     public static final String SVE_URL = "https://apolo-osp-qa-ui.todo-1.com/BC_SVE_User/Login";
+    protected String methodName;
 
     public NavigateSVE() {
 
@@ -20,12 +20,15 @@ public class NavigateSVE {
     public void openBrowser() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
     }
 
     @BeforeEach
     public void getNewPage() {
+        methodName = Thread.currentThread()
+                .getStackTrace()[2]
+                .getMethodName();
         context = browser.newContext();
-        context.tracing().start(new Tracing.StartOptions().setScreenshots(true));
         sve = context.newPage();
     }
 
@@ -39,7 +42,6 @@ public class NavigateSVE {
         sve.type("//input[@id='b20-ActivationTokenStep1SerialConfirmationInput']", "111111111 ");
         sve.click("//div/button[not(@disabled) and @id='b20-TokenActivationStep1ModalContinueButton']");
         sve.click("//div/button[@id='b22-TokenActivationStep3ModalContinueButton']");
-        //sve.click("//div[@id='b19-b5-b2-Column1']");
         sve.keyboard().type("111111", new Keyboard.TypeOptions().setDelay(100));
         sve.click("//span[not(@disabled) and @id='b19-ContinueButton']");
     }
@@ -51,8 +53,7 @@ public class NavigateSVE {
 
     @AfterEach
     void closeContext() {
-        context.tracing().stop(new Tracing.StopOptions()
-                .setPath(Paths.get("trace.zip")));
+        sve.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("./screenshots/" + sve.title() + " - " + methodName + ".png")));
         context.close();
     }
 
@@ -60,5 +61,6 @@ public class NavigateSVE {
     public void closePlaywright() {
         playwright.close();
     }
+
 
 }
