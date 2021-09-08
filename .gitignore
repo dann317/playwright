@@ -394,3 +394,4 @@ gradle-app.setting
 
 >>>>>>> 8f64aef155559dd484a81d3df6e90ea4eae59ecd
 # End of https://www.gitignore.io/api/java,sonar,linux,macos,gradle,windows,eclipse,netbeans,intellij,sonarqube,intellij+all,intellij+iml
+src/test/java/resources/
