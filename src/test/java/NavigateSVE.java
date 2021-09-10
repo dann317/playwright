@@ -1,5 +1,7 @@
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
+import pages.HomePage;
+import pages.LoginPage;
 
 import java.nio.file.Paths;
 
@@ -19,24 +21,31 @@ public class NavigateSVE {
     @BeforeAll
     public void openBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
-
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        methodName = Thread.currentThread()
+                .getStackTrace()[2]
+                .getMethodName();
+        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get("./videos/video - " + methodName + ".mp4")));
+        sve = context.newPage();
     }
 
     @BeforeEach
     public void getNewPage() {
-        methodName = Thread.currentThread()
-                .getStackTrace()[2]
-                .getMethodName();
-        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get("./videos/video - "+methodName+".mp4")));
-        sve = context.newPage();
+        LoginPage loginPage = new LoginPage(sve);
+        loginPage.loginInSVEWithToken("user1su17281", "Prueba.4", "111111111", "111111");
     }
 
-    public void loginWithToken() {
+    /*public void loginWithToken() {
         sve.navigate(SVE_URL);
-        sve.type("//input[@id='InputUserName']", "user1su17281");
+        Locator username = sve.locator("//input[@id='InputUserName']");
+        Locator password = sve.locator("//input[@id='InputUserPassword']");
+        Locator continueButton = sve.locator("//div/button[not(@disabled) and @id='ContinueButton']");
+        username.type("user1su17281");
+        password.type("Prueba.4");
+        continueButton.click();
+        ----sve.type("//input[@id='InputUserName']", "user1su17281");
         sve.type("//input[@id='InputUserPassword']", "Prueba.4");
-        sve.click("//div/button[not(@disabled) and @id='ContinueButton']");
+        sve.click("//div/button[not(@disabled) and @id='ContinueButton']");------
         sve.type("//input[@id='b20-ActivationTokenStep1SerialNumberInput']", "111111111");
         sve.keyboard().press("Tab");
         sve.type("//input[@id='b20-ActivationTokenStep1SerialConfirmationInput']", "111111111 ");
@@ -44,11 +53,12 @@ public class NavigateSVE {
         sve.click("//div/button[@id='b22-TokenActivationStep3ModalContinueButton']");
         sve.keyboard().type("111111", new Keyboard.TypeOptions().setDelay(100));
         sve.click("//span[not(@disabled) and @id='b19-ContinueButton']");
-    }
+    }*/
 
     public String getAvaiableMenus() {
-        return sve.innerText("//div[@class='display-flex justify-space-between']");
-
+       // return sve.innerText("//div[@class='display-flex justify-space-between']");
+        HomePage homePage = new HomePage(sve);
+        return homePage.getAvaiableMenu();
     }
 
     @AfterEach
